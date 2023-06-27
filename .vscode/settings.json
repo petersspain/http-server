@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "test": "plaintext",
+        "locale": "cpp"
+    }
+}
