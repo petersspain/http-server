@@ -7,12 +7,15 @@
 
 // HTTP 0.9 - только метод GET
 // 
-static const std::string GET_RESPONSE = "HTTP/1.1 200 OK\r\n\
-                                        Content-Type: text; charset=utf-8\r\n\
-                                        Content-Length: 13\r\n\n\
-                                        Hello, USER!\r\n";
+static const std::string GET_RESPONSE = "HTTP/1.1 200 OK\
+                                        \r\nContent-Type: text; charset=utf-8\
+                                        \r\nContent-Length: 13\
+                                        \r\n\nHello, USER!\n";
 
 static const std::string POST_RESPONSE = "HTTP/1.1 200 OK\n";
+
+static const std::string DELETE_RESPONSE = "HTTP/1.1 200 OK\
+                                            \r\nConnection: close\n";
 
 static const std::string BAD_REQUEST = "HTTP/1.1 400 Bad Request\n";
 
@@ -50,7 +53,7 @@ int main() {
             response = GET_RESPONSE;
             break;
         case Method::DELETE:
-            response = POST_RESPONSE;
+            response = DELETE_RESPONSE;
             run = false;
             break;
         case Method::INVALID:

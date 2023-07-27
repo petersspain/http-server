@@ -39,6 +39,15 @@ Server::Server(const std::string& hostname, const std::string& servname) {
         throw std::runtime_error(err_str);
     }
 
+    // Think about remove this, cause server has no need to restart so much time
+    int opt = 1;
+    if (setsockopt(socket_descr, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
+        freeaddrinfo(addr);
+        auto err_str = strerror(errno);
+        std::cout << "Failed to set SO_REUSEADDR for socket: " << err_str << std::endl;
+        throw std::runtime_error(err_str);
+    }
+
     socket_descr_ = socket_descr;
     
     if (bind(socket_descr, addr->ai_addr, addr->ai_addrlen) < 0) {
