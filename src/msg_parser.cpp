@@ -1,8 +1,10 @@
 #include "msg_parser.hpp"
 
-Method ParseMethod(std::string_view method) {
+#include <utility>
+
+std::optional<Method> ParseMethod(std::string_view method) {
     if (method.size() < 3) {
-        return Method::INVALID;
+        return std::nullopt;
     }
     switch (method[0]) {
     case 'O':
@@ -55,14 +57,42 @@ Method ParseMethod(std::string_view method) {
         }
         break;
     }
-    return Method::INVALID;
+    return std::nullopt;
 }
 
-Message ParseMessage(std::string_view message) {
-    Method method = Method::INVALID;
-    auto pos = message.find(' ');
-    if (pos != message.npos) {
-        method = ParseMethod(message.substr(0, pos));
+std::optional<Message> ParseMessage(std::string_view message) {
+    Message result;
+    const auto npos = message.npos;
+
+    // get method
+    size_t pos = message.find(' ');
+    if (pos == npos) {
+        return std::nullopt;
     }
-    return { method };
+    auto method = ParseMethod(message.substr(0, pos));
+    if (!method.has_value()) {
+        return std::nullopt;
+    }
+    result.method = std::move(method.value());
+    
+    // get uri
+    message.remove_prefix(pos + 1);
+    if (pos = message.find(' ');
+        pos == npos) {
+        return std::nullopt;
+    }
+    result.uri = message.substr(0, pos);
+    
+    // get http version
+    message.remove_prefix(pos + 1);
+    if (pos = message.find("HTTP/"); 
+        pos == npos) {
+        return std::nullopt;
+    }
+    pos += 5;
+    auto end = message.find('\n');
+    result.version = message.substr(pos, end - pos);
+
+    // parse headers (find \n\n and take this string to parse headers)
+    return result;
 }

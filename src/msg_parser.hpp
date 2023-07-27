@@ -1,7 +1,8 @@
 #include <string_view>
+#include <string>
+#include <optional>
 
 enum class Method {
-    INVALID = -1,
     OPTIONS,
     GET,
     HEAD,
@@ -15,6 +16,8 @@ enum class Method {
 
 struct Message {
     Method method;
+    std::string uri;
+    std::string version;
 };
 
-Message ParseMessage(std::string_view message);
+std::optional<Message> ParseMessage(std::string_view message);
